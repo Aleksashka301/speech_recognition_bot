@@ -30,7 +30,7 @@ def welcome_generation(update: Update, context: CallbackContext, project_id: str
 if __name__ == '__main__':
 	env = Env()
 	env.read_env()
-	os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = env('GOOGLE_APPLICATION_CREDENTIALS')
+	os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = env.str("GOOGLE_APPLICATION_CREDENTIALS")
 
 	tg_token = env.str('TG_TOKEN')
 	project_id = env.str('DIALOG_FLOW_PROJECT_ID')
