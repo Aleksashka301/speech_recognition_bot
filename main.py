@@ -18,7 +18,7 @@ def welcome_generation(update: Update, context: CallbackContext, project_id: str
 	query_input = dialogflow.QueryInput(text=text_input)
 
 	response = session_client.detect_intent(
-		request={"session": session, "query_input": query_input}
+		request={'session': session, 'query_input': query_input}
 	)
 
 	context.bot.send_message(
