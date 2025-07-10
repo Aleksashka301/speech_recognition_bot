@@ -1,10 +1,10 @@
 import os
+import random
 import vk_api
 
 from environs import Env
 from google.cloud import dialogflow
 from vk_api.longpoll import VkEventType, VkLongPoll
-from vk_api.utils import get_random_id
 
 
 def welcome(project_id, session_id, text, language_code='ru'):
@@ -22,7 +22,7 @@ def welcome(project_id, session_id, text, language_code='ru'):
 if __name__ == '__main__':
 	env = Env()
 	env.read_env()
-	os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = env.str("GOOGLE_APPLICATION_CREDENTIALS")
+	os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = env.str('GOOGLE_APPLICATION_CREDENTIALS')
 
 	vk_token = env.str('VK_TOKEN')
 	project_id = env.str('DIALOG_FLOW_PROJECT_ID')
@@ -32,16 +32,10 @@ if __name__ == '__main__':
 	longpoll = VkLongPoll(vk_session)
 
 	for event in longpoll.listen():
-		if event.type == VkEventType.MESSAGE_NEW:
-			print('Новое сообщение')
-			if event.to_me:
-				print(f'Для меня от {event.user_id}')
-				print(f'Текст сообщения: {event.text}')
-				bot_response = welcome(project_id, event.user_id, event.text)
-
-				vk.messages.send(
-					user_id=event.user_id,
-					message=bot_response,
-					random_id=get_random_id(),
-				)
-				print(f'Сообщение от мея: {bot_response}')
+		if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+			vk.messages.send(
+				user_id=event.user_id,
+				# message=welcome(project_id, event.user_id, event.text),
+				message=event.text,
+				random_id=random.randint(1, 10000),
+			)
