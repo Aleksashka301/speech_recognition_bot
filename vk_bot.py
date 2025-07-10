@@ -35,7 +35,6 @@ if __name__ == '__main__':
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me:
 			vk.messages.send(
 				user_id=event.user_id,
-				# message=welcome(project_id, event.user_id, event.text),
-				message=event.text,
+				message=welcome(project_id, event.user_id, event.text),
 				random_id=random.randint(1, 10000),
 			)
