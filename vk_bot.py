@@ -7,16 +7,21 @@ from google.cloud import dialogflow
 from vk_api.longpoll import VkEventType, VkLongPoll
 
 
-def welcome(project_id, session_id, text, language_code='ru'):
+def welcome(project_id, vk, event, language_code='ru'):
 	session_client = dialogflow.SessionsClient()
-	session = session_client.session_path(project_id, session_id)
+	session = session_client.session_path(project_id, event.user_id)
 
-	text_input = dialogflow.TextInput(text=text, language_code=language_code)
+	text_input = dialogflow.TextInput(text=event.text, language_code=language_code)
 	query_input = dialogflow.QueryInput(text=text_input)
 
 	response = session_client.detect_intent(request={'session': session, 'query_input': query_input})
 
-	return response.query_result.fulfillment_text
+	if not response.query_result.intent.is_fallback:
+		vk.messages.send(
+			user_id=event.user_id,
+			message=response.query_result.fulfillment_text,
+			random_id=random.randint(1, 10000),
+		)
 
 
 if __name__ == '__main__':
@@ -33,8 +38,5 @@ if __name__ == '__main__':
 
 	for event in longpoll.listen():
 		if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-			vk.messages.send(
-				user_id=event.user_id,
-				message=welcome(project_id, event.user_id, event.text),
-				random_id=random.randint(1, 10000),
-			)
+			welcome(project_id, vk, event)
+
