@@ -40,7 +40,7 @@ def welcome_generation(update: Update, context: CallbackContext, project_id: str
 if __name__ == '__main__':
 	env = Env()
 	env.read_env()
-	os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = env.str("GOOGLE_APPLICATION_CREDENTIALS")
+	os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = env.str('GOOGLE_APPLICATION_CREDENTIALS')
 
 	tg_token = env.str('TG_TOKEN')
 	admin_chat_id = env.int('ADMIN_CHAT_ID')
