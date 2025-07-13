@@ -17,6 +17,7 @@ git clone https://github.com/Aleksashka301/speech_recognition_bot
 python -m venv venv
 ```
 Активируйте виртуальное окружение
+
 windows
 ```
 venv\Scripts\activate
