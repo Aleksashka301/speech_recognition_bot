@@ -5,7 +5,6 @@ import random
 import vk_api
 
 from environs import Env
-from google.cloud import dialogflow
 from vk_api.longpoll import VkEventType, VkLongPoll
 
 from bot_utils import get_response_dialogflow
@@ -22,14 +21,7 @@ class TelegramLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=admin_chat_id, text=log_entry)
 
 
-def get_welcome(project_id, vk, event, language_code='ru'):
-# session_client = dialogflow.SessionsClient()
-# session = session_client.session_path(project_id, event.user_id)
-#
-# text_input = dialogflow.TextInput(text=event.text, language_code=language_code)
-# query_input = dialogflow.QueryInput(text=text_input)
-#
-# response = session_client.detect_intent(request={'session': session, 'query_input': query_input})
+def get_welcome(project_id, vk, event):
     response = get_response_dialogflow(project_id, event.user_id, event.text)
 
     if not response.query_result.intent.is_fallback:
