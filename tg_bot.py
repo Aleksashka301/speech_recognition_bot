@@ -4,7 +4,6 @@ import telegram
 
 from environs import Env
 from functools import partial
-from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import MessageHandler, Updater, CallbackContext, Filters
 
@@ -22,17 +21,9 @@ class TelegramLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=admin_chat_id, text=log_entry)
 
 
-def get_welcome(update: Update, context: CallbackContext, project_id: str, language_code='ru'):
-# session_client = dialogflow.SessionsClient()
-# session = session_client.session_path(project_id, update.effective_chat.id)
-#
-# text_input = dialogflow.TextInput(text=update.message.text, language_code=language_code)
-# query_input = dialogflow.QueryInput(text=text_input)
-#
-# response = session_client.detect_intent(
-# 	request={'session': session, 'query_input': query_input}
-# )
+def get_welcome(update: Update, context: CallbackContext, project_id: str):
     chat_id = update.effective_chat.id
+
     context.bot.send_message(
         chat_id=chat_id,
         text=get_response_dialogflow(
