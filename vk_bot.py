@@ -22,11 +22,12 @@ class TelegramLogsHandler(logging.Handler):
 
 
 def get_welcome(project_id, vk, event):
-    response = get_response_dialogflow(project_id, event.user_id, event.text)
+    user_id = event.user_id
+    response = get_response_dialogflow(project_id, user_id, event.text)
 
     if not response.query_result.intent.is_fallback:
         vk.messages.send(
-            user_id=event.user_id,
+            user_id=user_id,
             message=response.query_result.fulfillment_text,
             random_id=random.randint(1, 10000),
         )
