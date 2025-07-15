@@ -21,9 +21,10 @@ class TelegramLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=admin_chat_id, text=log_entry)
 
 
-def get_welcome(project_id, vk, event):
+def handle_dialogflow_reply(project_id, vk, event):
     user_id = event.user_id
-    response = get_response_dialogflow(project_id, user_id, event.text)
+    session_id = f'vk_{user_id}'
+    response = get_response_dialogflow(project_id, session_id, event.text)
 
     if not response.query_result.intent.is_fallback:
         vk.messages.send(
@@ -60,6 +61,6 @@ if __name__ == '__main__':
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             try:
-                get_welcome(project_id, vk, event)
+                handle_dialogflow_reply(project_id, vk, event)
             except Exception:
                 logging.exception('')
