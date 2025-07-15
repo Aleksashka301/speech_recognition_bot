@@ -21,14 +21,15 @@ class TelegramLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=admin_chat_id, text=log_entry)
 
 
-def get_welcome(update: Update, context: CallbackContext, project_id: str):
+def handle_dialogflow_reply(update: Update, context: CallbackContext, project_id: str):
     chat_id = update.effective_chat.id
+    session_id = f'tg_{chat_id}'
 
     context.bot.send_message(
         chat_id=chat_id,
         text=get_response_dialogflow(
             project_id,
-            chat_id,
+            session_id,
             update.message.text
         ).query_result.fulfillment_text
     )
@@ -55,11 +56,11 @@ if __name__ == '__main__':
     updater = Updater(token=tg_token)
     dispatcher = updater.dispatcher
 
-    get_welcome_handler = MessageHandler(
+    dialogflow_handler = MessageHandler(
         Filters.text & ~Filters.command,
-        partial(get_welcome, project_id=project_id)
+        partial(handle_dialogflow_reply, project_id=project_id)
     )
-    dispatcher.add_handler(get_welcome_handler)
+    dispatcher.add_handler(dialogflow_handler)
 
     updater.start_polling()
     updater.idle()
